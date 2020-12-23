@@ -3,9 +3,12 @@ name = "dev_api"
 version = "0.1.0"
 description = ""
 authors = ["Rom"]
+license = "apache-2.0"
 
 [tool.poetry.dependencies]
-python = "3.8"
+python = "^3.6"
+pytest = "^6.2.1"
+requests = "^2.25.1"
 
 [tool.poetry.dev-dependencies]
 
