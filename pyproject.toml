@@ -2,7 +2,7 @@
 name = "dev_api"
 version = "0.1.0"
 description = ""
-authors = ["Rom <luoweilong@banggood.com>"]
+authors = ["Rom"]
 
 [tool.poetry.dependencies]
 python = "3.8"
