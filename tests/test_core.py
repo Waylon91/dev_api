@@ -1,25 +1,9 @@
-from httpbin.api import BaseApi
+from httpbin.httpbin import ApiHttpbinGet, ApiHttpbinPost 
 
 
 def test_version():
     from httpbin import __version__
     assert isinstance(__version__, str)
-
-
-class ApiHttpbinGet(BaseApi):
-    url = "http://httpbin.org/get"
-    method = "GET"
-    params = {}
-    headers = {"accept": "application/json"}
-
-
-class ApiHttpbinPost(BaseApi):
-    url = "http://httpbin.org/post"
-    method = "POST"
-    params = {}
-    headers = {"accept": "application/json"}
-    data = "abc=123"
-    json = {"abc": 123}
 
 
 def test_httpbin_get():
@@ -48,3 +32,34 @@ def test_httpbin_post():
         .validate("headers.server", "gunicorn/19.9.0") \
         .validate("json().url", "http://httpbin.org/post") \
         .validate("json().headers.Accept", "application/json")
+
+
+def test_httpbin_parameters_extract():
+    user_id = "abc123"
+    ApiHttpbinGet() \
+        .set_params(user_id=user_id) \
+        .run() \
+        .validate("status_code", 200) \
+        .validate("headers.server", "gunicorn/19.9.0") \
+        .validate("json().url", "http://httpbin.org/get?user_id={}".format(user_id)) \
+        .validate("json().headers.Accept", "application/json") 
+
+    ApiHttpbinPost() \
+        .set_json({"user_id": user_id}) \
+        .run() \
+        .validate("status_code", 200) \
+        .validate("headers.server", "gunicorn/19.9.0") \
+        .validate("json().url", "http://httpbin.org/post") \
+        .validate("json().headers.Accept", "application/json")
+    
+
+def test_httpbin_extrace():
+    resp = ApiHttpbinGet().run()
+    status_code = resp.extract('status_code')
+    assert status_code == 200
+
+    server = resp.extract('headers.server')
+    assert server == "gunicorn/19.9.0"
+
+    accept = resp.extract('json().headers.Accept')
+    assert accept == 'application/json' 
