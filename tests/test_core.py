@@ -1,4 +1,4 @@
-from httpbin.httpbin import ApiHttpbinGet, ApiHttpbinPost 
+from httpbin.httpbin import ApiHttpbinGet, ApiHttpbinPost, ApiHttpbinGetCookies 
 
 
 def test_version():
@@ -63,3 +63,19 @@ def test_httpbin_extrace():
 
     accept = resp.extract('json().headers.Accept')
     assert accept == 'application/json' 
+
+
+def test_httpbin_parameters_extrace():
+    freeform = ApiHttpbinGetCookies().run().extract("json().cookies.freeform")
+    assert freeform == '123'
+
+
+def  test_httpbin_get_cookie():
+    app_run = ApiHttpbinGetCookies()\
+                .set_cookie('freeform1', "123")\
+                .set_cookie('freeform2', "456")\
+                .run()
+    freeform1 = app_run.extract("json().cookies.freeform1")
+    freeform2 = app_run.extract("json().cookies.freeform2")
+    assert freeform1 == "123"
+    assert freeform2 == "456"

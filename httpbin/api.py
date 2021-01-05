@@ -5,6 +5,7 @@ class BaseApi(object):
     method = "GET"
     url = ""
     params = {}
+    cookies = {}
     headers = {}
     data = {}
     json = {}
@@ -17,6 +18,10 @@ class BaseApi(object):
     def set_data(self, data):
         self.data = data
         return self
+    
+    def set_cookie(self, key, value):
+        self.cookies.update({key: value})
+        return self
 
     def set_json(self, json_data):
         self.json = json_data
@@ -27,6 +32,7 @@ class BaseApi(object):
             self.method,
             self.url,
             params=self.params,
+            cookies=self.cookies,
             headers=self.headers,
             data=self.data,
             json=self.data
