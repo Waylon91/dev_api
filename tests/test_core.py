@@ -79,3 +79,15 @@ def  test_httpbin_get_cookie():
     freeform2 = app_run.extract("json().cookies.freeform2")
     assert freeform1 == "123"
     assert freeform2 == "456"
+
+
+def test_httpbin_login_status(init_session):
+    # step one: login and get cookie
+    ApiHttpbinGetCookies().set_cookie("freeform", "567").run(init_session)
+
+    # step two: request another api, check cookie
+    resp = ApiHttpbinPost()\
+        .set_json({'abc': 123})\
+        .run(init_session).get_response()
+    request_headers = resp.request.headers
+    assert "freeform=567" in request_headers["Cookie"]

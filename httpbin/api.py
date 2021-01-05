@@ -10,6 +10,8 @@ class BaseApi(object):
     data = {}
     json = {}
 
+    def __init__(self):
+        self.response = None
 
     def set_params(self, **params):
         self.params = params
@@ -27,8 +29,9 @@ class BaseApi(object):
         self.json = json_data
         return self
 
-    def run(self):
-        self.response = requests.request(
+    def run(self, session=None):
+        session = session or requests.sessions.Session()
+        self.response = session.request(
             self.method,
             self.url,
             params=self.params,
@@ -55,3 +58,6 @@ class BaseApi(object):
         acture_value = self.extract(key)
         assert acture_value == expected_value
         return self
+
+    def get_response(self):
+        return self.response
