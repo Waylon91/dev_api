@@ -66,7 +66,7 @@ def test_httpbin_extrace():
 
 
 def test_httpbin_parameters_extrace():
-    freeform = ApiHttpbinGetCookies().run().extract("json().cookies.freeform")
+    freeform = ApiHttpbinGetCookies().set_cookie('freeform', '123').run().extract("json().cookies.freeform")
     assert freeform == '123'
 
 
